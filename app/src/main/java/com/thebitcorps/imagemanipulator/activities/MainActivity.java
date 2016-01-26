@@ -1,13 +1,14 @@
-package com.thebitcorps.imagemanipulator;
+package com.thebitcorps.imagemanipulator.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+
+import com.thebitcorps.imagemanipulator.R;
+import com.thebitcorps.imagemanipulator.fragments.CameraCaptureFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,16 +18,10 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
-//		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//		fab.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//						.setAction("Action", null).show();
-//			}
-//		});
-
+		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.fragment);
+		android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		fragmentTransaction.add(frameLayout.getId(), CameraCaptureFragment.newInstance());
+		fragmentTransaction.commit();
 	}
 
 	@Override
