@@ -26,13 +26,7 @@ public class CamaraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		try{
-			camera.setPreviewDisplay(holder);
-			camera.startPreview();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.d(TAG, "Error setting camera preview: " + e.getMessage());
-		}
+		starPreviewForCamera(holder);
 	}
 
 	@Override
@@ -40,12 +34,11 @@ public class CamaraPreview extends SurfaceView implements SurfaceHolder.Callback
 		if(holder.getSurface() == null){
 			return;
 		}
-		try{
-			camera.stopPreview();
-		}catch (Exception e){
-			e.printStackTrace();
-			Log.d(TAG, "Error stoping preview: " + e.getMessage());
-		}
+		stopPreviewForCamera();
+		starPreviewForCamera(holder);
+	}
+
+	private void starPreviewForCamera(SurfaceHolder holder) {
 		try{
 			camera.setPreviewDisplay(holder);
 			camera.startPreview();
@@ -58,5 +51,21 @@ public class CamaraPreview extends SurfaceView implements SurfaceHolder.Callback
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 
+	}
+
+
+	public void setCamera(Camera camera) {
+		stopPreviewForCamera();
+		this.camera = camera;
+		starPreviewForCamera(getHolder());
+	}
+
+	private void stopPreviewForCamera(){
+		try{
+			camera.stopPreview();
+		}catch (Exception e){
+			e.printStackTrace();
+			Log.d(TAG, "Error stoping preview: " + e.getMessage());
+		}
 	}
 }

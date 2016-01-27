@@ -15,5 +15,12 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:src="@android:drawable/ic_menu_camera"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/change_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@android:drawable/ic_menu_revert"/>
 </android.support.design.widget.CoordinatorLayout>
 
