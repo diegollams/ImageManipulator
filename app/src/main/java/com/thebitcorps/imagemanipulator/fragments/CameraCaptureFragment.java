@@ -2,10 +2,11 @@ package com.thebitcorps.imagemanipulator.fragments;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.thebitcorps.imagemanipulator.R;
 import com.thebitcorps.imagemanipulator.helpers.CamaraPreview;
@@ -23,7 +23,9 @@ public class CameraCaptureFragment extends Fragment{
 	private CamaraPreview cameraPreview;
 	private Camera camera;
 	private int cameraId;
+	private Bitmap imageBitmap;
 	private static final String TAG = "shit";
+	public static final String IMAGE_EXTRA = "imageextra";
 	FrameLayout  frameLayout;
 	public static CameraCaptureFragment newInstance(){
 		CameraCaptureFragment cameraCaptureFragment = new CameraCaptureFragment();
@@ -103,16 +105,43 @@ public class CameraCaptureFragment extends Fragment{
 	private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
+//			// TODO: 1/31/16 change the bitmap pass between fragments and pass only uri 
+			imageBitmap = BitmapFactory.decodeByteArray(data,0,data.length);
 
+//			File pictureFile = UriCreator.getOutputMediaFile(UriCreator.MEDIA_TYPE_IMAGE);
+//			if(pictureFile == null){
+//				Log.d(TAG, "Error creating media file, check storage permissions: ");
+//				return;
+//			}
+//			FileOutputStream fos = null;
+//			try {
+//				fos = new FileOutputStream(pictureFile);
+//				fos.write(data);
+//				fos.close();
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 		}
 	};
 	private View.OnClickListener captureListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			camera.takePicture(null, null, pictureCallback);
+			ShowImageFragment imageFragment = ShowImageFragment.newInstance();
+			if(imageBitmap == null){
+				Snackbar.make(getView(),"no hay",Snackbar.LENGTH_LONG);
+				return;
+			}
+			Bundle extras = new Bundle();
+			extras.putParcelable(IMAGE_EXTRA, imageBitmap);
+			imageFragment.setArguments(extras);
 			FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-			fragmentTransaction.replace(R.id.fragment, ShowImageFragment.newInstance());
+			fragmentTransaction.replace(R.id.fragment,imageFragment);
 			fragmentTransaction.addToBackStack(null);
 			fragmentTransaction.commit();
+			stopCamera();
 		}
 	};
 	private FloatingActionButton.OnClickListener changeCameraOnClickListener = new View.OnClickListener() {
