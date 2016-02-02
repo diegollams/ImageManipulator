@@ -44,7 +44,7 @@ public class CameraCaptureFragment extends Fragment{
 		View view = inflater.inflate(R.layout.fragment_camera_capture,container,false);
 		FloatingActionButton button = (FloatingActionButton) view.findViewById(R.id.capture);
 		FloatingActionButton changeCamera = (FloatingActionButton) view.findViewById(R.id.change_camera);
-		cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+		cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
 		if(Camera.getNumberOfCameras() > 1){
 			changeCamera.setOnClickListener(changeCameraOnClickListener);
 		}else{
@@ -101,6 +101,7 @@ public class CameraCaptureFragment extends Fragment{
 		camera = getCameraInstance(cameraId,getActivity());
 		if(camera != null){
 //			create a new camera preview and add it to the framelayot
+			// TODO: 2/2/16 fix bug on resume no opening preview 
 //			// TODO: 1/27/16 Change so we dont instance a new camera preview so only we change the camera
 			if(cameraPreview == null){
 				cameraPreview = new CamaraPreview(getActivity(),camera);

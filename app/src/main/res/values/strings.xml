@@ -6,4 +6,7 @@
     <string name="image_error">Can\'t open image</string>
     <string name="show_image_title">Show image</string>
     <string name="camera_error">Error opening camera</string>
+    <string name="filter_title_choice">Choose filter</string>
+
+
 </resources>

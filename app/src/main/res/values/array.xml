@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="filters">
+        <item><string name="gray_scale">"Gray Scale"</string></item>
+        <item><string name="inverse">"Inverse"</string></item>
+    </array>
+</resources>
