@@ -1,7 +1,9 @@
 <resources>
-    <string name="app_name">ImageManipulator</string>
+    <string name="app_name">Image Manipulator</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="image_error">Can\'t open image</string>
+    <string name="show_image_title">Show image</string>
+    <string name="camera_error">Error opening camera</string>
 </resources>
