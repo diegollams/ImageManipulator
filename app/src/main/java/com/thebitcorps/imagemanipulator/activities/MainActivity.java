@@ -9,14 +9,14 @@ import android.widget.FrameLayout;
 
 import com.thebitcorps.imagemanipulator.R;
 import com.thebitcorps.imagemanipulator.fragments.CameraCaptureFragment;
-
+// TODO: 2/6/16 on orientation change savedInstanceState for the fragment running
 public class MainActivity extends AppCompatActivity {
-
+	Toolbar toolbar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.fragment);
 		android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

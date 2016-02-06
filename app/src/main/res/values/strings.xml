@@ -8,5 +8,7 @@
     <string name="camera_error">Error opening camera</string>
     <string name="filter_title_choice">Choose filter</string>
 
-
+    <!-- Filters-->
+    <string name="gray_scale">"Gray Scale"</string>
+    <string name="inverse">"Inverse"</string>
 </resources>

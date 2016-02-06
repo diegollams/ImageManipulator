@@ -24,7 +24,7 @@ public class UriCreator {
 	public static File getOutputMediaFile(int type,String appName){
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
-
+// TODO: 2/6/16 Save images in cache maybe
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_PICTURES), appName);
 		// This location works best if you want the created images to be shared
@@ -43,7 +43,7 @@ public class UriCreator {
 		File mediaFile;
 		if (type == MEDIA_TYPE_IMAGE){
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-					"IMG_"+ timeStamp + ".jpg");
+					"IMG_"+ timeStamp + ".JPEG");
 		} else if(type == MEDIA_TYPE_VIDEO) {
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 					"VID_"+ timeStamp + ".mp4");

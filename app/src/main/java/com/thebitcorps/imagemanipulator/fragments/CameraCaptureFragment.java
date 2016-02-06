@@ -3,6 +3,8 @@ package com.thebitcorps.imagemanipulator.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,19 +19,23 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.thebitcorps.imagemanipulator.R;
+import com.thebitcorps.imagemanipulator.helpers.BitmapTrasformer;
 import com.thebitcorps.imagemanipulator.helpers.CamaraPreview;
+import com.thebitcorps.imagemanipulator.helpers.UriCreator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
+// TODO: 2/6/16 fix bug in in oorientation change camera
 public class CameraCaptureFragment extends Fragment{
 	private CamaraPreview cameraPreview;
 	private Camera camera;
 	private int cameraId;
 	private Uri imageUri;
+	private static int IMAGE_WIDTH_DEFAULT = 100;
+	private static int IMAGE_HEIGTH_DEFAULT = 100;
 	private static final String TAG = "shit";
 
 	public static final String DEFAULT_IMAGE_NAME = "sampleImage.jpg";
@@ -42,16 +48,22 @@ public class CameraCaptureFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_camera_capture,container,false);
-		FloatingActionButton button = (FloatingActionButton) view.findViewById(R.id.capture);
+//		capture camra button
+		FloatingActionButton captureButton = (FloatingActionButton) view.findViewById(R.id.capture);
+		captureButton.setOnClickListener(captureListener);
+//		change camera button
 		FloatingActionButton changeCamera = (FloatingActionButton) view.findViewById(R.id.change_camera);
-		cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+//		if device not support various cameras hide button
 		if(Camera.getNumberOfCameras() > 1){
 			changeCamera.setOnClickListener(changeCameraOnClickListener);
 		}else{
 			changeCamera.setVisibility(View.INVISIBLE);
 		}
+//		default camera
+		cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+
 		frameLayout = (FrameLayout) view.findViewById(R.id.camera);
-		button.setOnClickListener(captureListener);
+
 		return view;
 	}
 
@@ -63,12 +75,12 @@ public class CameraCaptureFragment extends Fragment{
 	public static Camera getCameraInstance(int cameraId,Activity activity ){
 		Camera camera = null;
 		try{
-//			cameraId = cameraId > 2 ? 0 : cameraId;
+// TODO: 2/6/16 Add camera features 
 //			open the camra
 			camera = Camera.open(cameraId);
-
 			Camera.CameraInfo  info = new Camera.CameraInfo();
 			Camera.getCameraInfo(cameraId,info);
+
 //			get the display rotation
 			int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
 			int degrees = 0;
@@ -140,7 +152,7 @@ public class CameraCaptureFragment extends Fragment{
 		imageFragment.setArguments(extras);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.replace(R.id.fragment,imageFragment);
-		fragmentTransaction.addToBackStack(null);
+//		fragmentTransaction.addToBackStack(null);
 		fragmentTransaction.commit();
 	}
 
@@ -148,15 +160,19 @@ public class CameraCaptureFragment extends Fragment{
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 
-			File pictureFile = new File(getActivity().getFilesDir(),DEFAULT_IMAGE_NAME);
+			File pictureFile = UriCreator.getOutputMediaFile(UriCreator.MEDIA_TYPE_IMAGE,getActivity().getPackageName());
 			if(pictureFile == null){
 				Log.d(TAG, "Error creating media file, check storage permissions: ");
 				return;
 			}
+
+			Bitmap bitmap = BitmapTrasformer.decodeSampledBitmapFromData(data,IMAGE_WIDTH_DEFAULT,IMAGE_HEIGTH_DEFAULT);
 			FileOutputStream fos = null;
 			try {
 				fos = new FileOutputStream(pictureFile);
-				fos.write(data);
+				bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+
+//				fos.write(bitmap,to);
 				fos.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
