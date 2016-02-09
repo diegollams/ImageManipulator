@@ -4,5 +4,6 @@
         <item>@string/gray_scale</item>
         <item>@string/inverse_max_canal</item>
         <item>@string/inverse_normal</item>
+        <item>@string/binarization</item>
     </string-array>
 </resources>

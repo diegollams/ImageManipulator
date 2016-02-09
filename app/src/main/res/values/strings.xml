@@ -12,4 +12,5 @@
     <string name="gray_scale">"Gray Scale"</string>
     <string name="inverse_max_canal">"Inverse max canal"</string>
     <string name="inverse_normal">"Inverse normal"</string>
+    <string name="binarization">Binarization</string>
 </resources>

@@ -3,11 +3,8 @@ package com.thebitcorps.imagemanipulator.helpers;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.File;
 
@@ -16,6 +13,9 @@ import java.io.File;
  */
 public class BitmapTrasformer {
 
+	public static final int HALF_PIXEL_VALUE = 125;
+	public static final int MAX_PIXEL_VALUE = 255;
+	public static final int MIN_PIXEL_VALUE = 0;
 	public static int calculateInSampleSize(
 			BitmapFactory.Options options, int reqWidth, int reqHeight) {
 		// Raw height and width of image
@@ -60,10 +60,15 @@ public class BitmapTrasformer {
 	public static Bitmap getBitmapFromUri(Uri uri,int reqWidth, int reqHeight){
 		File file = new File(uri.getPath());
 		Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), getOptions(reqWidth, reqHeight));
-
 		return bitmap;
 	}
 
+	/**
+	 *
+	 * @param reqWidth
+	 * @param reqHeight
+	 * @return {@link android.graphics.BitmapFactory.Options } object with mutable
+	 */
 	@NonNull
 	private static BitmapFactory.Options getOptions(int reqWidth, int reqHeight) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -74,6 +79,13 @@ public class BitmapTrasformer {
 		return options;
 	}
 
+	/**
+	 * Method that decode a bitmap form a byte[] with dimension that fit reqHeight and reqWidth
+	 * @param data the byte array the bitmap will be create
+	 * @param reqWidth the max value of width that the bitmap can be
+	 * @param reqHeight the max value of height that the bitmap can be
+	 * @return a bitmap with dimension that fits the reqWidth and reqHeight
+	 */
 	public static Bitmap decodeSampledBitmapFromData(byte[] data
 														 ,int reqWidth, int reqHeight) {
 
@@ -92,16 +104,25 @@ public class BitmapTrasformer {
 		return BitmapFactory.decodeByteArray(data, 0, data.length, options);
 	}
 
-	public static void grayScaleBitmap(Bitmap bitmap){
+	/**
+	 * will transform bitmap so every pixel will be in grayscale form
+	 * @param bitmap a bitmap will all channels in the same value
+	 */
+	public static void grayScale(Bitmap bitmap){
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
 				int pixel = bitmap.getPixel(x,y);
-				bitmap.setPixel(x, y,RGBHelper.getGrayScaleColor(pixel));
+				bitmap.setPixel(x, y,RGBHelper.getBetterGrayScaleColor(pixel));
 			}
 		}
 	}
 
-	public static void inverseMaxCanalImageBitmap(Bitmap bitmap){
+	/**
+	 * will transform the bitmap so every pixel will be inverse, first will get the max value in the image for every  color channel
+	 * then apply {@link #inverseMethod(Bitmap, int, int, int)} with the max value of every channel
+	 * @param bitmap
+	 */
+	public static void inverseMaxCanal(Bitmap bitmap){
 		int maxRed = 0,maxGreen = 0,maxBlue = 0;
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
@@ -114,6 +135,13 @@ public class BitmapTrasformer {
 		inverseMethod(bitmap, maxRed, maxGreen, maxBlue);
 	}
 
+	/**
+	 * get the max channel value and substract every pixel channel so we get the inverse of every pixel
+	 * @param bitmap the bitmap that will be inverse
+	 * @param maxRed value that the red channel of every pixel will be substract
+	 * @param maxGreen value that the green channel of every pixel will be substract
+	 * @param maxBlue value that the green channel of every pixel will be substract
+	 */
 	private static void inverseMethod(Bitmap bitmap, int maxRed, int maxGreen, int maxBlue) {
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
@@ -124,7 +152,30 @@ public class BitmapTrasformer {
 		}
 	}
 
+	/**
+	 * will transform the bitmap so every pixel will be inverse,
+	 * then apply {@link #inverseMethod(Bitmap, int, int, int)} with the {@value #MAX_PIXEL_VALUE} for  every channel
+	 * @param bitmap the bitmap that will be covert
+	 */
 	public static void inverseNormal(Bitmap bitmap){
-		inverseMethod(bitmap,255,255,255);
+		inverseMethod(bitmap,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE);
+	}
+
+	/**
+	 * transform bitmap to black and white pixels
+	 * @param bitmap the bitmap that will be covert
+	 */
+	public static void binarization(Bitmap bitmap){
+		for (int x = 0; x < bitmap.getWidth(); x++) {
+			for (int y = 0; y < bitmap.getHeight(); y++) {
+				int grayScalePixel = RGBHelper.getGrayScaleColor(bitmap.getPixel(x, y));
+				if(RGBHelper.getRed(grayScalePixel) < HALF_PIXEL_VALUE){
+					bitmap.setPixel(x,y,RGBHelper.createPixel(MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE));
+				}
+				else{
+					bitmap.setPixel(x,y,RGBHelper.createPixel(MIN_PIXEL_VALUE,MIN_PIXEL_VALUE,MIN_PIXEL_VALUE,MIN_PIXEL_VALUE));
+				}
+			}
+		}
 	}
 }

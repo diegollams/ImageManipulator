@@ -119,20 +119,20 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog, String filter) {
 		if(filter.equals( getString(R.string.gray_scale))){
-			BitmapTrasformer.grayScaleBitmap(imageBitmap);
-			imageView.setImageBitmap(imageBitmap);
+			BitmapTrasformer.grayScale(imageBitmap);
 		}
 		else if(filter.equals(getString(R.string.inverse_max_canal))){
-			BitmapTrasformer.inverseMaxCanalImageBitmap(imageBitmap);
-			imageView.setImageBitmap(imageBitmap);
+			BitmapTrasformer.inverseMaxCanal(imageBitmap);
 		}
 		else if(filter.equals(getString(R.string.inverse_normal))){
 			BitmapTrasformer.inverseNormal(imageBitmap);
-			imageView.setImageBitmap(imageBitmap);
+		}
+		else if(filter.equals(getString(R.string.binarization))){
+			BitmapTrasformer.binarization(imageBitmap);
 		}
 		else{
 
 		}
-
+		imageView.setImageBitmap(imageBitmap);
 	}
 }

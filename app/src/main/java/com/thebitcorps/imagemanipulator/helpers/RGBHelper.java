@@ -42,9 +42,14 @@ public class RGBHelper {
 		return RGBHelper.getAlpha(color);
 	}
 
-	public static int getGrayScaleColor(int color){
+	public static int getBetterGrayScaleColor(int color){
 //		sqrt( 0.299*R^2 + 0.587*G^2 + 0.114*B^2 )
 		int gray = (int) (0.2126*RGBHelper.getRed(color) +  0.7152*RGBHelper.getGreen(color) + 0.0722*RGBHelper.getBlue(color));
+		return RGBHelper.createPixel(gray, gray, gray, gray);
+
+	}
+	public static int getGrayScaleColor(int color){
+		int gray = (int) (RGBHelper.getRed(color) + RGBHelper.getGreen(color) + RGBHelper.getBlue(color) / 3);
 		return RGBHelper.createPixel(gray, gray, gray, gray);
 
 	}
