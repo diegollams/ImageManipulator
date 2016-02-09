@@ -122,9 +122,15 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 			BitmapTrasformer.grayScaleBitmap(imageBitmap);
 			imageView.setImageBitmap(imageBitmap);
 		}
-		else if(filter.equals(getString(R.string.inverse))){
-
-		}else{
+		else if(filter.equals(getString(R.string.inverse_max_canal))){
+			BitmapTrasformer.inverseMaxCanalImageBitmap(imageBitmap);
+			imageView.setImageBitmap(imageBitmap);
+		}
+		else if(filter.equals(getString(R.string.inverse_normal))){
+			BitmapTrasformer.inverseNormal(imageBitmap);
+			imageView.setImageBitmap(imageBitmap);
+		}
+		else{
 
 		}
 

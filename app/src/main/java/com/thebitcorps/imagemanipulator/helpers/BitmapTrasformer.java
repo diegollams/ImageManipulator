@@ -100,4 +100,31 @@ public class BitmapTrasformer {
 			}
 		}
 	}
+
+	public static void inverseMaxCanalImageBitmap(Bitmap bitmap){
+		int maxRed = 0,maxGreen = 0,maxBlue = 0;
+		for (int x = 0; x < bitmap.getWidth(); x++) {
+			for (int y = 0; y < bitmap.getHeight(); y++) {
+				RGBHelper pixel = new RGBHelper(bitmap.getPixel(x,y));
+				if(pixel.getRed() > maxRed) maxRed = pixel.getRed();
+				if(pixel.getGreen() > maxGreen) maxGreen= pixel.getGreen();
+				if(pixel.getBlue() > maxBlue) maxBlue = pixel.getBlue();
+			}
+		}
+		inverseMethod(bitmap, maxRed, maxGreen, maxBlue);
+	}
+
+	private static void inverseMethod(Bitmap bitmap, int maxRed, int maxGreen, int maxBlue) {
+		for (int x = 0; x < bitmap.getWidth(); x++) {
+			for (int y = 0; y < bitmap.getHeight(); y++) {
+				RGBHelper pixel = new RGBHelper(bitmap.getPixel(x,y));
+				int newPixel = RGBHelper.createPixel(maxRed - pixel.getRed(), maxGreen - pixel.getGreen(), maxBlue - pixel.getBlue(), pixel.getAlpha());
+				bitmap.setPixel(x,y,newPixel);
+			}
+		}
+	}
+
+	public static void inverseNormal(Bitmap bitmap){
+		inverseMethod(bitmap,255,255,255);
+	}
 }
