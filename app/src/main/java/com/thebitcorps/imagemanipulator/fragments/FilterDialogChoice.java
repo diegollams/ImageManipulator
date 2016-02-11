@@ -22,6 +22,10 @@ public class FilterDialogChoice extends android.app.DialogFragment {
 
 	}
 
+	public void setListener(FilterDialogListener listener) {
+		this.listener = listener;
+	}
+
 	FilterDialogListener listener;
 
 	@Override
@@ -35,6 +39,7 @@ public class FilterDialogChoice extends android.app.DialogFragment {
 		}
 	}
 
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		final String[] options = getResources().getStringArray(R.array.filters);
@@ -45,13 +50,13 @@ public class FilterDialogChoice extends android.app.DialogFragment {
 				selected = which;
 			}
 		})
-		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				listener.onDialogPositiveClick(FilterDialogChoice.this,options[selected]);
 			}
 		})
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dismiss();

@@ -1,9 +1,11 @@
 package com.thebitcorps.imagemanipulator.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,12 +14,15 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thebitcorps.imagemanipulator.R;
 import com.thebitcorps.imagemanipulator.helpers.BitmapTrasformer;
@@ -30,26 +35,17 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 	private CoordinatorLayout coordinatorLayout;
 	private Uri imageUri;
 	private Bitmap imageBitmap;
+	private EditText numberInput;
 	private ImageView imageView;
 	private android.support.v7.widget.Toolbar tolbar;
-	private static int IMAGE_WIDTH_DEFAULT = 100;
-	private static int IMAGE_HEIGTH_DEFAULT = 100;
+	private static int IMAGE_WIDTH_DEFAULT = 500;
+	private static int IMAGE_HEIGTH_DEFAULT = 500;
 	public static final String TAG = "showImageActivity";
 	public static ShowImageFragment newInstance(){
 		ShowImageFragment fragment =  new ShowImageFragment();
 		return fragment;
 	}
 
-
-	public Activity getActivity(Fragment fragment) {
-		if (fragment == null) {
-			return null;
-		}
-		while (fragment.getParentFragment() != null) {
-			fragment = fragment.getParentFragment();
-		}
-		return fragment.getActivity();
-	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,6 +65,22 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 
 	}
 
+	private AlertDialog.Builder createNumberDialog(String title){
+		AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(title);
+		numberInput = new EditText(getActivity());
+		numberInput.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+		numberInput.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+		numberInput.setText("0");
+		builder.setView(numberInput);
+		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		return builder;
+	}
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,9 +142,54 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 		else if(filter.equals(getString(R.string.binarization))){
 			BitmapTrasformer.binarization(imageBitmap);
 		}
+		else if(filter.equals(getString(R.string.brightness))){
+			AlertDialog.Builder builder = createNumberDialog(getString(R.string.brightness));
+			builder.setPositiveButton(getString(R.string.ok), addBrightnessListener);
+			builder.show();
+		}
+		else  if(filter.equals(getString(R.string.darken))){
+			AlertDialog.Builder builder = createNumberDialog(getString(R.string.darken));
+			builder.setPositiveButton(getString(R.string.ok), addDarkenListener);
+			builder.show();
+		}
+		else if(filter.equals(getString(R.string.contrast))){
+			AlertDialog.Builder builder = createNumberDialog(getString(R.string.contrast));
+			builder.setPositiveButton(getString(R.string.ok), addContrastListener	);
+			builder.show();
+		}
+		else if(filter.equals(getString(R.string.better_contrast))){
+			AlertDialog.Builder builder = createNumberDialog(getString(R.string.better_contrast));
+			builder.setPositiveButton(getString(R.string.ok), addBetterContrastListener	);
+			builder.show();
+		}
 		else{
 
 		}
 		imageView.setImageBitmap(imageBitmap);
 	}
+	DialogInterface.OnClickListener addBrightnessListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			BitmapTrasformer.changeBrightness(imageBitmap,Integer.parseInt(numberInput.getText().toString()));
+		}
+	};
+	DialogInterface.OnClickListener addDarkenListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			BitmapTrasformer.changeBrightness(imageBitmap,-1*Integer.parseInt(numberInput.getText().toString()));
+		}
+	};
+	DialogInterface.OnClickListener addContrastListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			BitmapTrasformer.changeContrast(imageBitmap,Float.parseFloat(numberInput.getText().toString()));
+		}
+	};
+	DialogInterface.OnClickListener addBetterContrastListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			BitmapTrasformer.changeContrastBetter(imageBitmap,Integer.parseInt(numberInput.getText().toString()));
+		}
+	};
+
 }

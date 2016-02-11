@@ -35,7 +35,6 @@ public class BitmapTrasformer {
 				inSampleSize *= 2;
 			}
 		}
-
 		return inSampleSize;
 	}
 
@@ -105,6 +104,23 @@ public class BitmapTrasformer {
 	}
 
 	/**
+	 *
+	 * @param value
+	 * @return
+	 */
+	private static int boundPixelValue(int value){
+		if(value > MAX_PIXEL_VALUE){
+			return MAX_PIXEL_VALUE;
+		}
+		else if(value < MIN_PIXEL_VALUE){
+			return MIN_PIXEL_VALUE;
+		}
+		else{
+			return value;
+		}
+
+	}
+	/**
 	 * will transform bitmap so every pixel will be in grayscale form
 	 * @param bitmap a bitmap will all channels in the same value
 	 */
@@ -122,6 +138,7 @@ public class BitmapTrasformer {
 	 * then apply {@link #inverseMethod(Bitmap, int, int, int)} with the max value of every channel
 	 * @param bitmap
 	 */
+	@Deprecated
 	public static void inverseMaxCanal(Bitmap bitmap){
 		int maxRed = 0,maxGreen = 0,maxBlue = 0;
 		for (int x = 0; x < bitmap.getWidth(); x++) {
@@ -169,7 +186,7 @@ public class BitmapTrasformer {
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
 				int grayScalePixel = RGBHelper.getGrayScaleColor(bitmap.getPixel(x, y));
-				if(RGBHelper.getRed(grayScalePixel) < HALF_PIXEL_VALUE){
+				if(RGBHelper.getRed(grayScalePixel) > HALF_PIXEL_VALUE){
 					bitmap.setPixel(x,y,RGBHelper.createPixel(MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE));
 				}
 				else{
@@ -178,4 +195,56 @@ public class BitmapTrasformer {
 			}
 		}
 	}
+
+	/**
+	 *
+	 * @param bitmap
+	 * @param brightness
+	 */
+	public static void changeBrightness(Bitmap bitmap,int brightness){
+		for (int x = 0; x < bitmap.getWidth(); x++) {
+			for (int y = 0; y < bitmap.getHeight(); y++) {
+//				RGBHelper pixel = new RGBHelper(bitmap.getPixel(x, y));
+				int pixel  = bitmap.getPixel(x,y);
+				int red  = boundPixelValue(RGBHelper.getRed(pixel) + brightness);
+				int green = boundPixelValue(RGBHelper.getGreen(pixel) + brightness);
+				int blue = boundPixelValue(RGBHelper.getBlue(pixel) + brightness);
+				bitmap.setPixel(x,y,RGBHelper.createPixel(red,green,blue,RGBHelper.getAlpha(pixel)));
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @param bitmap
+	 * @param contrast
+	 */
+	public static void changeContrast(Bitmap bitmap,float contrast){
+		for (int x = 0; x < bitmap.getWidth(); x++) {
+			for (int y = 0; y < bitmap.getHeight(); y++) {
+//				RGBHelper pixel = new RGBHelper(bitmap.getPixel(x, y));
+				int pixel  = bitmap.getPixel(x,y);
+				int red  = boundPixelValue((int) (RGBHelper.getRed(pixel) * contrast));
+				int green = boundPixelValue((int) (RGBHelper.getGreen(pixel) * contrast));
+				int blue = boundPixelValue((int) (RGBHelper.getBlue(pixel) * contrast));
+				bitmap.setPixel(x,y,RGBHelper.createPixel(red,green,blue,RGBHelper.getAlpha(pixel)));
+			}
+		}
+	}
+
+	public static void changeContrastBetter(Bitmap bitmap,int contrast){
+		final float newContrast = (259 * (contrast + 255)) / (255 * (259 - contrast));
+		for (int x = 0; x < bitmap.getWidth(); x++) {
+			for (int y = 0; y < bitmap.getHeight(); y++) {
+//				RGBHelper pixel = new RGBHelper(bitmap.getPixel(x, y));
+				int pixel  = bitmap.getPixel(x,y);
+				int red  = boundPixelValue((int) ((RGBHelper.getRed(pixel) * newContrast)-128) + 128);
+				int green = boundPixelValue((int)((RGBHelper.getGreen(pixel) * newContrast)-128) + 128);
+				int blue = boundPixelValue((int) ((RGBHelper.getBlue(pixel) * newContrast)-128) + 128);
+				bitmap.setPixel(x,y,RGBHelper.createPixel(red,green,blue,RGBHelper.getAlpha(pixel)));
+			}
+		}
+	}
+
+
 }

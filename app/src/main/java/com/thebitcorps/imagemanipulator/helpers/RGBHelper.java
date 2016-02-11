@@ -7,7 +7,7 @@ import android.graphics.Color;
  */
 public class RGBHelper {
 
-	private int color;
+	public int color;
 	public RGBHelper(int color) {
 		this.color = color;
 
@@ -61,7 +61,7 @@ public class RGBHelper {
 		return color >> 16 & 0xFF;
 	}
 	public static int getBlue(int color){
-		return color >> 0 & 0xFF;
+		return color & 0xFF;
 	}
 	public static int getGreen(int color){
 		return color >> 8 & 0xFF;

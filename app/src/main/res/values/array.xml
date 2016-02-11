@@ -5,5 +5,9 @@
         <item>@string/inverse_max_canal</item>
         <item>@string/inverse_normal</item>
         <item>@string/binarization</item>
+        <item>@string/brightness</item>
+        <item>@string/darken</item>
+        <item>@string/contrast</item>
+        <item>@string/better_contrast</item>
     </string-array>
 </resources>

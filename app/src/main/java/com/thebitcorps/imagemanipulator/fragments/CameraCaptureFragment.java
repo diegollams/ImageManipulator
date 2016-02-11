@@ -34,8 +34,8 @@ public class CameraCaptureFragment extends Fragment{
 	private Camera camera;
 	private int cameraId;
 	private Uri imageUri;
-	private static int IMAGE_WIDTH_DEFAULT = 100;
-	private static int IMAGE_HEIGTH_DEFAULT = 100;
+	private static int IMAGE_WIDTH_DEFAULT = 500;
+	private static int IMAGE_HEIGTH_DEFAULT = 500;
 	private static final String TAG = "shit";
 
 	public static final String DEFAULT_IMAGE_NAME = "sampleImage.jpg";
@@ -60,7 +60,7 @@ public class CameraCaptureFragment extends Fragment{
 			changeCamera.setVisibility(View.INVISIBLE);
 		}
 //		default camera
-		cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+		cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
 
 		frameLayout = (FrameLayout) view.findViewById(R.id.camera);
 

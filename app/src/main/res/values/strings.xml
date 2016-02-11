@@ -13,4 +13,13 @@
     <string name="inverse_max_canal">"Inverse max canal"</string>
     <string name="inverse_normal">"Inverse normal"</string>
     <string name="binarization">Binarization</string>
+    <string name="brightness">Add brightness</string>
+    <string name="darken">Make darken</string>
+    <string name="contrast">Change contrast</string>
+    <string name="better_contrast">Change contrast better</string>
+
+
+    <!-- Other-->
+    <string name="cancel">"Cancel"</string>
+    <string name="ok">"Ok"</string>
 </resources>
