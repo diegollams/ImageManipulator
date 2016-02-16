@@ -62,22 +62,7 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 
 	}
 
-	private AlertDialog.Builder createNumberDialog(String title){
-		AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(title);
-		numberInput = new EditText(getActivity());
-		numberInput.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-		numberInput.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-		numberInput.setText("0");
-		builder.setView(numberInput);
-		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		return builder;
-	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,6 +95,22 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 
 		imageView.setImageBitmap(imageBitmap);
 		return view;
+	}
+	private AlertDialog.Builder createNumberDialog(String title){
+		AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(title);
+		numberInput = new EditText(getActivity());
+		numberInput.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+		numberInput.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+		numberInput.setText("0");
+		builder.setView(numberInput);
+		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		return builder;
 	}
 
 	private void showFilersDialog(){

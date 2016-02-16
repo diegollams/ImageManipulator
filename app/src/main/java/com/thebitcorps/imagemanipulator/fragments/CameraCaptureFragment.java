@@ -2,7 +2,9 @@ package com.thebitcorps.imagemanipulator.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -13,6 +15,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +41,7 @@ public class CameraCaptureFragment extends Fragment{
 	private Uri imageUri;
 	private static int IMAGE_WIDTH_DEFAULT = 500;
 	private static int IMAGE_HEIGTH_DEFAULT = 500;
+
 	private static final String TAG = "shit";
 
 	public static final String DEFAULT_IMAGE_NAME = "sampleImage.jpg";
@@ -145,16 +151,18 @@ public class CameraCaptureFragment extends Fragment{
 		}
 	}
 
-	private void changeToShowImageFragment() {
+
+	public static void changeToShowImageFragment(Uri imageUri,FragmentManager fragmentManager) {
 		ShowImageFragment imageFragment = ShowImageFragment.newInstance();
 		Bundle extras = new Bundle();
 		extras.putParcelable(ShowImageFragment.IMAGE_URI_EXTRA, imageUri);
 		imageFragment.setArguments(extras);
-		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.replace(R.id.fragment,imageFragment);
 //		fragmentTransaction.addToBackStack(null);
 		fragmentTransaction.commit();
 	}
+
 
 	private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
 		@Override
@@ -181,7 +189,8 @@ public class CameraCaptureFragment extends Fragment{
 			}
 			imageUri = Uri.fromFile(pictureFile);
 			stopCamera();
-			changeToShowImageFragment();
+
+			changeToShowImageFragment(imageUri,getFragmentManager());
 		}
 	};
 	private View.OnClickListener captureListener = new View.OnClickListener() {
@@ -205,5 +214,6 @@ public class CameraCaptureFragment extends Fragment{
 			}
 		}
 	};
+
 
 }
