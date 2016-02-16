@@ -9,5 +9,6 @@
         <item>@string/darken</item>
         <item>@string/contrast</item>
         <item>@string/better_contrast</item>
+        <item>@string/gray_histogram</item>
     </string-array>
 </resources>

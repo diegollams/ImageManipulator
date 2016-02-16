@@ -6,11 +6,12 @@ import android.graphics.Color;
  * Created by diegollams on 2/6/16.
  */
 public class RGBHelper {
+	public static final int BLACK = 0xff000000;
+	public static final int BLUE = 0xff0000ff;
 
 	public int color;
 	public RGBHelper(int color) {
 		this.color = color;
-
 	}
 
 //	public int getColor() {

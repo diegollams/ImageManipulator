@@ -1,9 +1,7 @@
 package com.thebitcorps.imagemanipulator.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -22,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thebitcorps.imagemanipulator.R;
 import com.thebitcorps.imagemanipulator.helpers.BitmapTrasformer;
@@ -161,6 +158,10 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 			AlertDialog.Builder builder = createNumberDialog(getString(R.string.better_contrast));
 			builder.setPositiveButton(getString(R.string.ok), addBetterContrastListener	);
 			builder.show();
+		}
+		else if(filter.equals(getString(R.string.gray_histogram))){
+			BitmapTrasformer.grayScale(imageBitmap);
+			imageBitmap = BitmapTrasformer.histogram(imageBitmap);
 		}
 		else{
 

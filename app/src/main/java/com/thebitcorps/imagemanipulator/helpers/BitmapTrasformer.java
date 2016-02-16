@@ -5,8 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by diegollams on 2/6/16.
@@ -219,7 +224,7 @@ public class BitmapTrasformer {
 	 * @param bitmap
 	 * @param contrast
 	 */
-	public static void changeContrast(Bitmap bitmap,float contrast){
+	public static void changeContrast(@NonNull Bitmap bitmap,float contrast){
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
 //				RGBHelper pixel = new RGBHelper(bitmap.getPixel(x, y));
@@ -232,7 +237,7 @@ public class BitmapTrasformer {
 		}
 	}
 
-	public static void changeContrastBetter(Bitmap bitmap,int contrast){
+	public static void changeContrastBetter(@NonNull Bitmap bitmap,int contrast){
 		final float newContrast = (259 * (contrast + 255)) / (255 * (259 - contrast));
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
@@ -244,6 +249,44 @@ public class BitmapTrasformer {
 				bitmap.setPixel(x,y,RGBHelper.createPixel(red,green,blue,RGBHelper.getAlpha(pixel)));
 			}
 		}
+	}
+
+	public static Bitmap histogram(@NonNull Bitmap original){
+		HashMap<Integer,Integer> values = new HashMap<>();
+		int maxValue = 0;
+		for (int x = 0; x < original.getWidth(); x++) {
+			for (int y = 0; y < original.getHeight(); y++) {
+//				get arbitrary pixel image should be in grayscale
+				int pixel = RGBHelper.getRed(original.getPixel(x, y));
+				Math.max(1,1);
+				Integer count = values.get(pixel);
+				if(count == null) {
+					count = 0;
+				}
+				count++;
+				if(count > maxValue){
+					maxValue = count;
+				}
+				values.put(pixel,count);
+			}
+		}
+		Log.e("shit","" + maxValue);
+		Bitmap histogram = Bitmap.createBitmap(MAX_PIXEL_VALUE, 100, Bitmap.Config.ARGB_8888);
+
+//		for (int x = 0; x < histogram.getWidth(); x++) {
+//			for (int y = 0; y < histogram.getHeight(); y++) {
+//				histogram.setPixel(x,y,RGBHelper.BLUE);
+//			}
+//		}
+		for (Map.Entry<Integer, Integer> x :values.entrySet()) {
+			Log.e("shit"," "+ x.getValue()* 100 / maxValue);
+			for (int y = 0; y < x.getValue()* 100 / maxValue; y++) {
+				histogram.setPixel(x.getKey(),y, RGBHelper.BLUE);
+			}
+		}
+
+		return histogram;
+
 	}
 
 
