@@ -10,5 +10,6 @@
         <item>@string/contrast</item>
         <item>@string/better_contrast</item>
         <item>@string/gray_histogram</item>
+        <item>@string/all_histogram</item>
     </string-array>
 </resources>

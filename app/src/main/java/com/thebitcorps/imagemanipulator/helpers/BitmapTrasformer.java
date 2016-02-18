@@ -3,15 +3,14 @@ package com.thebitcorps.imagemanipulator.helpers;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by diegollams on 2/6/16.
@@ -19,7 +18,7 @@ import java.util.Set;
 public class BitmapTrasformer {
 
 	public static final int HALF_PIXEL_VALUE = 125;
-	public static final int MAX_PIXEL_VALUE = 255;
+	public static final int MAX_PIXEL_VALUE = 256;
 	public static final int MIN_PIXEL_VALUE = 0;
 	public static int calculateInSampleSize(
 			BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -237,6 +236,11 @@ public class BitmapTrasformer {
 		}
 	}
 
+	/**
+	 *
+	 * @param bitmap
+	 * @param contrast
+	 */
 	public static void changeContrastBetter(@NonNull Bitmap bitmap,int contrast){
 		final float newContrast = (259 * (contrast + 255)) / (255 * (259 - contrast));
 		for (int x = 0; x < bitmap.getWidth(); x++) {
@@ -251,6 +255,11 @@ public class BitmapTrasformer {
 		}
 	}
 
+	/**
+	 *
+	 * @param original
+	 * @return
+	 */
 	public static Bitmap histogram(@NonNull Bitmap original){
 		HashMap<Integer,Integer> values = new HashMap<>();
 		int maxValue = 0;
@@ -272,12 +281,6 @@ public class BitmapTrasformer {
 		}
 		Log.e("shit","" + maxValue);
 		Bitmap histogram = Bitmap.createBitmap(MAX_PIXEL_VALUE, 100, Bitmap.Config.ARGB_8888);
-
-//		for (int x = 0; x < histogram.getWidth(); x++) {
-//			for (int y = 0; y < histogram.getHeight(); y++) {
-//				histogram.setPixel(x,y,RGBHelper.BLUE);
-//			}
-//		}
 		for (Map.Entry<Integer, Integer> x :values.entrySet()) {
 			Log.e("shit"," "+ x.getValue()* 100 / maxValue);
 			for (int y = 0; y < x.getValue()* 100 / maxValue; y++) {
@@ -289,5 +292,39 @@ public class BitmapTrasformer {
 
 	}
 
+	/**
+	 *
+	 * @param original
+	 * @return
+	 */
+	public static Bitmap histogramAllChannels(@NonNull Bitmap original){
+		int[] redCounts = new int[MAX_PIXEL_VALUE],greenCounts = new int[MAX_PIXEL_VALUE],blueCounts = new int[MAX_PIXEL_VALUE];
+		int maxRed = 0,maxBlue = 0,maxGreen = 0;
+		for (int x = 0; x < original.getWidth(); x++) {
+			for (int y = 0; y < original.getHeight(); y++) {
+				int pixel = original.getPixel(x,y);
+				int red = RGBHelper.getRed(pixel);
+				int green = RGBHelper.getGreen(pixel);
+				int blue = RGBHelper.getBlue(pixel);
+				maxRed = Math.max(++redCounts[red],maxRed);
+				maxBlue = Math.max(++blueCounts[blue],maxBlue);
+				maxGreen = Math.max(++greenCounts[green],maxGreen);
+			}
+		}
+		Bitmap histogram = Bitmap.createBitmap(MAX_PIXEL_VALUE * 3, 100, Bitmap.Config.ARGB_8888);
+		for (int x = 0; x < MAX_PIXEL_VALUE; x++) {
+			for (int y = 0; y < (redCounts[x] *100) /maxRed; y++) {
+				histogram.setPixel(x,y, Color.RED);
+			}
+			for (int y = 0; y < (blueCounts[x] *100) /maxBlue; y++) {
+				histogram.setPixel(x + MAX_PIXEL_VALUE,y, Color.BLUE);
+			}
+			for (int y = 0 * 2; y < (greenCounts[x] *100) /maxGreen; y++) {
+				histogram.setPixel(x + MAX_PIXEL_VALUE * 2 ,y, Color.GREEN);
+			}
+		}
+		return histogram;
+
+	}
 
 }

@@ -164,6 +164,9 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 			BitmapTrasformer.grayScale(imageBitmap);
 			imageBitmap = BitmapTrasformer.histogram(imageBitmap);
 		}
+		else if(filter.equals(getString(R.string.all_histogram))){
+			imageBitmap = BitmapTrasformer.histogramAllChannels(imageBitmap);
+		}
 		else{
 
 		}

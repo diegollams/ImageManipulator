@@ -18,6 +18,7 @@
     <string name="contrast">Change contrast</string>
     <string name="better_contrast">Change contrast better</string>
     <string name="gray_histogram">Grayscale histogram</string>
+    <string name="all_histogram">Histogram all channels</string>
 
 
     <!-- Other-->
