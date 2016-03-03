@@ -1,5 +1,7 @@
 package com.thebitcorps.imagemanipulator.helpers;
 
+import android.graphics.Color;
+
 /**
  * Created by diegollams on 2/6/16.
  */
@@ -54,7 +56,10 @@ public class RGBHelper {
 	}
 
 	public static int createPixel(int red,int green,int blue,int alpha){
-		return (alpha << 24) | (red << 16) | (green << 8) | blue;
+		return (0xFF << 24) | (red << 16) | (green << 8) | blue;
+	}
+	public static final int createGrayPixel(int color){
+		return (0xFF << 24) | (color << 16) | (color << 8) | color;
 	}
 	public static int getRed(int color){
 		return color >> 16 & 0xFF;

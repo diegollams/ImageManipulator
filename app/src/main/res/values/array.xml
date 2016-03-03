@@ -11,5 +11,7 @@
         <item>@string/better_contrast</item>
         <item>@string/gray_histogram</item>
         <item>@string/all_histogram</item>
+        <item>@string/eq_lineal</item>
+        <item>@string/eq_stadistic</item>
     </string-array>
 </resources>

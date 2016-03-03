@@ -167,6 +167,13 @@ public class ShowImageFragment extends android.app.Fragment  implements  FilterD
 		else if(filter.equals(getString(R.string.all_histogram))){
 			imageBitmap = BitmapTrasformer.histogramAllChannels(imageBitmap);
 		}
+		else if(filter.equals(getString(R.string.eq_lineal))){
+			BitmapTrasformer.EQ(imageBitmap);
+		}
+		else if(filter.equals(getString(R.string.eq_stadistic))){
+			BitmapTrasformer.EQ(imageBitmap);
+			imageBitmap = BitmapTrasformer.histogram(imageBitmap);
+		}
 		else{
 
 		}

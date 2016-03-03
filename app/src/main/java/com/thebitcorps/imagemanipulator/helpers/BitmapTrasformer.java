@@ -17,8 +17,8 @@ import java.util.Map;
  */
 public class BitmapTrasformer {
 
-	public static final int HALF_PIXEL_VALUE = 125;
-	public static final int MAX_PIXEL_VALUE = 256;
+	public static final int HALF_PIXEL_VALUE = 175;
+	public static final int MAX_PIXEL_VALUE = 255;
 	public static final int MIN_PIXEL_VALUE = 0;
 	public static int calculateInSampleSize(
 			BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -109,7 +109,7 @@ public class BitmapTrasformer {
 
 	/**
 	 *
-	 * @param value
+	 * @param value a value of a pixel to be evaluate
 	 * @return
 	 */
 	private static int boundPixelValue(int value){
@@ -140,7 +140,7 @@ public class BitmapTrasformer {
 	/**
 	 * will transform the bitmap so every pixel will be inverse, first will get the max value in the image for every  color channel
 	 * then apply {@link #inverseMethod(Bitmap, int, int, int)} with the max value of every channel
-	 * @param bitmap
+	 * @param bitmap the bitmap that will be inverse
 	 */
 	@Deprecated
 	public static void inverseMaxCanal(Bitmap bitmap){
@@ -189,12 +189,12 @@ public class BitmapTrasformer {
 	public static void binarization(Bitmap bitmap){
 		for (int x = 0; x < bitmap.getWidth(); x++) {
 			for (int y = 0; y < bitmap.getHeight(); y++) {
-				int grayScalePixel = RGBHelper.getGrayScaleColor(bitmap.getPixel(x, y));
+				int grayScalePixel = RGBHelper.getBetterGrayScaleColor(bitmap.getPixel(x, y));
 				if(RGBHelper.getRed(grayScalePixel) > HALF_PIXEL_VALUE){
-					bitmap.setPixel(x,y,RGBHelper.createPixel(MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE,MAX_PIXEL_VALUE));
+					bitmap.setPixel(x,y,RGBHelper.createGrayPixel(MAX_PIXEL_VALUE));
 				}
 				else{
-					bitmap.setPixel(x,y,RGBHelper.createPixel(MIN_PIXEL_VALUE,MIN_PIXEL_VALUE,MIN_PIXEL_VALUE,MIN_PIXEL_VALUE));
+					bitmap.setPixel(x,y,RGBHelper.createGrayPixel(MIN_PIXEL_VALUE));
 				}
 			}
 		}
@@ -267,7 +267,6 @@ public class BitmapTrasformer {
 			for (int y = 0; y < original.getHeight(); y++) {
 //				get arbitrary pixel image should be in grayscale
 				int pixel = RGBHelper.getRed(original.getPixel(x, y));
-				Math.max(1,1);
 				Integer count = values.get(pixel);
 				if(count == null) {
 					count = 0;
@@ -298,7 +297,7 @@ public class BitmapTrasformer {
 	 * @return
 	 */
 	public static Bitmap histogramAllChannels(@NonNull Bitmap original){
-		int[] redCounts = new int[MAX_PIXEL_VALUE],greenCounts = new int[MAX_PIXEL_VALUE],blueCounts = new int[MAX_PIXEL_VALUE];
+		int[] redCounts = new int[MAX_PIXEL_VALUE + 1],greenCounts = new int[MAX_PIXEL_VALUE + 1],blueCounts = new int[MAX_PIXEL_VALUE + 1];
 		int maxRed = 0,maxBlue = 0,maxGreen = 0;
 		for (int x = 0; x < original.getWidth(); x++) {
 			for (int y = 0; y < original.getHeight(); y++) {
@@ -306,7 +305,7 @@ public class BitmapTrasformer {
 				int red = RGBHelper.getRed(pixel);
 				int green = RGBHelper.getGreen(pixel);
 				int blue = RGBHelper.getBlue(pixel);
-				maxRed = Math.max(++redCounts[red],maxRed);
+				maxRed = Math.max(++redCounts[red ],maxRed);
 				maxBlue = Math.max(++blueCounts[blue],maxBlue);
 				maxGreen = Math.max(++greenCounts[green],maxGreen);
 			}
@@ -324,7 +323,58 @@ public class BitmapTrasformer {
 			}
 		}
 		return histogram;
-
 	}
 
+	public static void EQ(Bitmap original){
+		int  max = 0,min = 0;
+//		grayScale(original);
+		for (int x = 0; x < original.getWidth(); x++) {
+			for (int y = 0; y < original.getHeight(); y++) {
+				int pixel = RGBHelper.getGrayScaleColor(original.getPixel(x, y));
+//				original.setPixel(x,y,pixel);
+				max = Math.max(RGBHelper.getRed(pixel), max);
+				min  = Math.min(RGBHelper.getRed(pixel), min);
+			}
+		}
+		Log.e("shit",max  +" "+min);
+		int f = (MAX_PIXEL_VALUE - MIN_PIXEL_VALUE) / (max - min);
+		for (int x = 0; x < original.getWidth(); x++) {
+			for (int y = 0; y < original.getHeight(); y++) {
+				int pixel = RGBHelper.getRed(original.getPixel(x,y));
+				int newPixel = boundPixelValue((pixel - min) * f);
+				int color =Color.rgb(newPixel,newPixel,newPixel);
+				original.setPixel(x,y,color);
+			}
+		}
+	}
+
+	public static void stadisticEQ(@NonNull Bitmap original) {
+
+
+		int[] counts = new int[MAX_PIXEL_VALUE + 1];
+		float[] normalizeCount = new float[MAX_PIXEL_VALUE + 1];
+		final int total = original.getWidth() * original.getHeight();
+		for (int x = 0; x < original.getWidth(); x++) {
+			for (int y = 0; y < original.getHeight(); y++) {
+				int pixel = RGBHelper.getGrayScaleColor(original.getPixel(x, y));
+				pixel = RGBHelper.getRed(pixel);
+				++counts[pixel];
+
+			}
+		}
+		for (int i = 0; i < MAX_PIXEL_VALUE + 1; i++) {
+			normalizeCount[i] = (float)counts[i] / (float)total;
+		}
+		float[] normalizeSum = new float[MAX_PIXEL_VALUE + 1];
+		normalizeSum[0] = normalizeCount[0];
+		for (int i = 1; i < MAX_PIXEL_VALUE + 1; i++) {
+			normalizeSum[i] += normalizeCount[i-1];
+		}
+		normalizeSum[MAX_PIXEL_VALUE] = 1;
+		for (int x = 0; x < original.getWidth(); x++) {
+			for (int y = 0; y < original.getHeight(); y++) {
+
+			}
+		}
+	}
 }

@@ -19,6 +19,8 @@
     <string name="better_contrast">Change contrast better</string>
     <string name="gray_histogram">Grayscale histogram</string>
     <string name="all_histogram">Histogram all channels</string>
+    <string name="eq_lineal">Lineal EQ</string>
+    <string name="eq_stadistic">Stadistic EQ</string>
 
 
     <!-- Other-->
